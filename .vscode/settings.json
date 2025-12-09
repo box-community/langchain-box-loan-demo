@@ -2,5 +2,12 @@
     "cSpell.words": [
         "langchain",
         "pytest"
-    ]
+    ],
+    "python.testing.pytestArgs": [
+        "tests",
+        "--cov-report",
+        "html"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

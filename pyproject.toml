@@ -4,12 +4,21 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
+
 dependencies = [
     "box-ai-agents-toolkit>=0.1.5",
+    "colorlog>=6.9.0",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
     "python-dotenv>=1.2.1",
 ]
 
 [dependency-groups]
-dev = ["pytest>=9.0.2", "ruff>=0.14.8"]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.8",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src", "tests"]
