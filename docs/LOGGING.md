@@ -7,6 +7,7 @@ The application uses a centralized, colored logging system with:
 - **Module context**: Shows the module name and line number where the log was generated
 - **Color-coded levels**: Different colors for each log level for easy visual scanning
 - **Consistent formatting**: All modules use the same logging format
+- **Automatic configuration**: Logging is automatically configured when you import the config module
 
 ## Log Levels and Colors
 
@@ -18,32 +19,25 @@ The application uses a centralized, colored logging system with:
 
 ## Usage in Code
 
-### 1. Import the logger utilities
+### Simple Two-Step Setup
+
+Logging is automatically configured when you import the `config` module. You just need to:
+
+### 1. Import logging and config
 
 ```python
-from utils.logging_config import get_logger, setup_logging
+import logging
+from config import config  # Logging auto-configures when config is imported
 ```
 
-### 2. Initialize logging (in main entry point only)
-
-```python
-from config import Config
-
-# Load configuration
-config = Config()
-
-# Initialize logging (call this once at application startup)
-setup_logging(level=config.LOG_LEVEL, log_file=config.LOG_FILE)
-```
-
-### 3. Get a logger for your module
+### 2. Get a logger for your module
 
 ```python
 # At the top of your module, after imports
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 ```
 
-### 4. Use the logger
+### 3. Use the logger
 
 ```python
 # Simple messages
@@ -77,12 +71,32 @@ LOG_LEVEL=INFO
 LOG_FILE=logs/application.log
 ```
 
+## Complete Example
+
+```python
+import logging
+from config import config
+
+logger = logging.getLogger(__name__)
+
+def my_function():
+    logger.info("This is an info message")
+    logger.debug("This is a debug message")
+    logger.warning("This is a warning")
+    logger.error("This is an error")
+```
+
+That's it! No need to call `setup_logging()` or import custom logger functions.
+
 ## Features
+
+### Automatic Configuration
+Logging is automatically configured when the `config` module is imported. The configuration is applied once and uses the settings from your `.env` file (or defaults).
 
 ### Automatic Module Context
 The logger automatically shows which module and line number generated each log entry:
 ```
-2025-12-09 16:51:40 | INFO     | utils.box_auth:62 | Box client authenticated successfully
+2025-12-09 16:51:40 | INFO     | utils.box_api_auth:62 | Box client authenticated successfully
 ```
 
 ### Exception Logging with Traceback

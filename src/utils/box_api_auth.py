@@ -1,15 +1,13 @@
-from box_sdk_gen import BoxClient, CCGConfig, BoxCCGAuth, FileTokenStorage
-from config import Config
-from utils.logging_config import get_logger
+import logging
 
-logger = get_logger(__name__)
+from box_sdk_gen import BoxAPIError, BoxClient, CCGConfig, BoxCCGAuth, FileTokenStorage
+from config import config
+
+logger = logging.getLogger(__name__)
 
 
-def get_box_client(config: Config) -> BoxClient:
+def get_box_client() -> BoxClient:
     """Authenticate and return a BoxClient instance.
-
-    Args:
-        config: Configuration object with Box API credentials
 
     Returns:
         Authenticated BoxClient instance
@@ -58,6 +56,13 @@ def get_box_client(config: Config) -> BoxClient:
     # Authenticate and create client
     auth = BoxCCGAuth(ccg_config)
     box_client = BoxClient(auth)
+
+    # Try to get the information about the authenticated user or enterprise
+    try:
+        box_client.users.get_user_me()
+    except BoxAPIError as e:
+        logger.error("Failed to authenticate Box client: %s", e)
+        raise e
 
     logger.info("Box client authenticated successfully")
     return box_client

@@ -1,14 +1,10 @@
 """Test script to demonstrate the logging system with all log levels."""
 
-from src.config import Config
-from src.utils.logging_config import get_logger, setup_logging
-
-# Initialize logging
-config = Config()  # pyright: ignore[reportCallIssue]
-setup_logging(level="DEBUG", log_file=None)
+import logging
+from config import config  # noqa: F401 - importing config triggers logging setup
 
 # Get logger for this module
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def demonstrate_logging() -> None:

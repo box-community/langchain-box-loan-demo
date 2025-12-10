@@ -1,17 +1,12 @@
-from config import Config
-from utils.logging_config import get_logger, setup_logging
+import logging
 
-logger = get_logger(__name__)
+from config import config  # noqa: F401 - importing config triggers logging setup
+
+logger = logging.getLogger(__name__)
 
 
 def main() -> None:
     """Main application entry point."""
-    # Load configuration
-    config = Config()  # pyright: ignore[reportCallIssue]
-
-    # Initialize logging
-    setup_logging(level=config.LOG_LEVEL, log_file=config.LOG_FILE)
-
     logger.info("Starting langchain-box-loan-demo application")
     logger.debug("Configuration loaded successfully")
 

@@ -5,6 +5,9 @@ This module provides a colored, formatted logging system with:
 - Module name and line number
 - Colored output based on log level
 - Consistent formatting across the application
+
+Logging is automatically configured when this module is imported.
+Simply use: logging.getLogger(__name__) in any module.
 """
 
 import logging
@@ -13,17 +16,28 @@ from typing import Optional
 
 import colorlog
 
+# Flag to ensure logging is only configured once
+_logging_configured = False
 
-def setup_logging(
+
+def _configure_logging(
     level: str = "INFO",
     log_file: Optional[str] = None,
 ) -> None:
-    """Configure application-wide logging with color support.
+    """Internal function to configure application-wide logging with color support.
 
     Args:
         level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
         log_file: Optional file path to also log to a file
     """
+    global _logging_configured
+
+    # Only configure once
+    if _logging_configured:
+        return
+
+    _logging_configured = True
+
     # Convert string level to logging constant
     numeric_level = getattr(logging, level.upper(), logging.INFO)
 
@@ -90,13 +104,11 @@ def setup_logging(
     logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 
-def get_logger(name: str) -> logging.Logger:
-    """Get a logger instance for a module.
-
-    Args:
-        name: Usually __name__ from the calling module
-
-    Returns:
-        Configured logger instance
-    """
-    return logging.getLogger(name)
+# Auto-configure logging when this module is imported
+# Import config here to avoid circular imports
+try:
+    from config import config
+    _configure_logging(level=config.LOG_LEVEL, log_file=config.LOG_FILE)
+except ImportError:
+    # If config isn't available yet, use defaults
+    _configure_logging()

@@ -1,11 +1,10 @@
-from utils.box_auth import get_box_client
-from config import Config
+from utils.box_api_auth import get_box_client
+from config import config
 from box_sdk_gen import BoxAPIError, BoxClient
 
 
 def test_utils_box_auth_get_box_client():
-    config = Config()  # pyright: ignore[reportCallIssue]
-    box_client = get_box_client(config)
+    box_client = get_box_client()
     assert isinstance(box_client, BoxClient)
 
     # Test currently logged in user
@@ -19,54 +18,64 @@ def test_utils_box_auth_get_box_client():
 
 def test_utils_box_auth_client_invalid_configurations():
     # Test invalid subject type
-    config = Config()  # pyright: ignore[reportCallIssue]
+    original_subject_type = config.BOX_SUBJECT_TYPE
+    original_subject_id = config.BOX_SUBJECT_ID
+    original_client_id = config.BOX_CLIENT_ID
+    original_client_secret = config.BOX_CLIENT_SECRET
 
-    config.BOX_SUBJECT_TYPE = "invalid_type"
     try:
-        get_box_client(config)
-        assert False, "Expected ValueError for invalid BOX_SUBJECT_TYPE"
-    except ValueError as e:
-        assert str(e) == "BOX_SUBJECT_TYPE must be either 'user' or 'enterprise'."
+        config.BOX_SUBJECT_TYPE = "invalid_type"
+        try:
+            get_box_client()
+            assert False, "Expected ValueError for invalid BOX_SUBJECT_TYPE"
+        except ValueError as e:
+            assert str(e) == "BOX_SUBJECT_TYPE must be either 'user' or 'enterprise'."
 
-    # reset config
-    config = Config()  # pyright: ignore[reportCallIssue]
-    config.BOX_SUBJECT_TYPE = None
-    try:
-        get_box_client(config)
-        assert False, "Expected ValueError for missing BOX_SUBJECT_TYPE"
-    except ValueError as e:
-        assert str(e) == "BOX_SUBJECT_TYPE must be either 'user' or 'enterprise'."
+        # reset config
+        config.BOX_SUBJECT_TYPE = original_subject_type
+        config.BOX_SUBJECT_TYPE = None  # type: ignore
+        try:
+            get_box_client()
+            assert False, "Expected ValueError for missing BOX_SUBJECT_TYPE"
+        except ValueError as e:
+            assert str(e) == "BOX_SUBJECT_TYPE must be either 'user' or 'enterprise'."
 
-    # reset config
-    config = Config()  # pyright: ignore[reportCallIssue]
-    config.BOX_CLIENT_ID = None
-    try:
-        get_box_client(config)
-        assert False, "Expected ValueError for missing BOX_CLIENT_ID"
-    except ValueError as e:
-        assert str(e) == "BOX_CLIENT_ID and BOX_CLIENT_SECRET must be provided."
+        # reset config
+        config.BOX_SUBJECT_TYPE = original_subject_type
+        config.BOX_CLIENT_ID = None  # type: ignore
+        try:
+            get_box_client()
+            assert False, "Expected ValueError for missing BOX_CLIENT_ID"
+        except ValueError as e:
+            assert str(e) == "BOX_CLIENT_ID and BOX_CLIENT_SECRET must be provided."
 
-    # reset config
-    config = Config()  # pyright: ignore[reportCallIssue]
-    config.BOX_CLIENT_SECRET = None
-    try:
-        get_box_client(config)
-        assert False, "Expected ValueError for missing BOX_CLIENT_SECRET"
-    except ValueError as e:
-        assert str(e) == "BOX_CLIENT_ID and BOX_CLIENT_SECRET must be provided."
+        # reset config
+        config.BOX_CLIENT_ID = original_client_id
+        config.BOX_CLIENT_SECRET = None  # type: ignore
+        try:
+            get_box_client()
+            assert False, "Expected ValueError for missing BOX_CLIENT_SECRET"
+        except ValueError as e:
+            assert str(e) == "BOX_CLIENT_ID and BOX_CLIENT_SECRET must be provided."
 
-    # reset config
-    config = Config()  # pyright: ignore[reportCallIssue]
-    config.BOX_SUBJECT_ID = None
-    try:
-        get_box_client(config)
-        assert False, "Expected ValueError for missing BOX_SUBJECT_ID"
-    except ValueError as e:
-        assert str(e) == "BOX_SUBJECT_ID must be provided."
+        # reset config
+        config.BOX_CLIENT_SECRET = original_client_secret
+        config.BOX_SUBJECT_ID = None  # type: ignore
+        try:
+            get_box_client()
+            assert False, "Expected ValueError for missing BOX_SUBJECT_ID"
+        except ValueError as e:
+            assert str(e) == "BOX_SUBJECT_ID must be provided."
 
-    # reset config
-    config = Config()  # pyright: ignore[reportCallIssue]
-    config.BOX_SUBJECT_TYPE = "enterprise"
-    config.BOX_SUBJECT_ID = "ABCD"
+        # reset config and test enterprise
+        config.BOX_SUBJECT_ID = original_subject_id
+        config.BOX_SUBJECT_TYPE = "enterprise"
+        config.BOX_SUBJECT_ID = "ABCD"
 
-    get_box_client(config)
+        get_box_client()
+    finally:
+        # Restore original config values
+        config.BOX_SUBJECT_TYPE = original_subject_type
+        config.BOX_SUBJECT_ID = original_subject_id
+        config.BOX_CLIENT_ID = original_client_id
+        config.BOX_CLIENT_SECRET = original_client_secret
