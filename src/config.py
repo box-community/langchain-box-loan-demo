@@ -18,6 +18,10 @@ class _Config(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LOG_FILE: Optional[str] = None  # Optional log file path
 
+    # External API Keys
+    TAVILY_API_KEY: str
+    ANTHROPIC_API_KEY: str
+
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",

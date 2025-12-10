@@ -8,9 +8,16 @@ requires-python = ">=3.13"
 dependencies = [
     "box-ai-agents-toolkit>=0.1.5",
     "colorlog>=6.9.0",
+    "deepagents>=0.3.0",
+    "ipython>=9.8.0",
+    "langchain-anthropic>=1.2.0",
+    "langgraph>=1.0.4",
+    "markdownify>=1.2.2",
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
     "python-dotenv>=1.2.1",
+    "rich>=14.2.0",
+    "tavily>=1.1.0",
 ]
 
 [dependency-groups]

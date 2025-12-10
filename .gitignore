@@ -36,6 +36,9 @@ MANIFEST
 
 .auth.*
 
+# agents memories
+agents_memories/
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
