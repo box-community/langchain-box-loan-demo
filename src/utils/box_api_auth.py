@@ -1,7 +1,7 @@
 import logging
 
 from box_sdk_gen import BoxAPIError, BoxClient, CCGConfig, BoxCCGAuth, FileTokenStorage
-from config import config
+from app_config import conf
 
 logger = logging.getLogger(__name__)
 
@@ -18,26 +18,26 @@ def get_box_client() -> BoxClient:
     logger.debug("Initializing Box client authentication")
 
     # Validate configuration
-    if config.BOX_SUBJECT_TYPE not in {"user", "enterprise"}:
-        logger.error("Invalid BOX_SUBJECT_TYPE: %s", config.BOX_SUBJECT_TYPE)
+    if conf.BOX_SUBJECT_TYPE not in {"user", "enterprise"}:
+        logger.error("Invalid BOX_SUBJECT_TYPE: %s", conf.BOX_SUBJECT_TYPE)
         raise ValueError("BOX_SUBJECT_TYPE must be either 'user' or 'enterprise'.")
 
-    if not config.BOX_SUBJECT_ID:
+    if not conf.BOX_SUBJECT_ID:
         logger.error("BOX_SUBJECT_ID is missing")
         raise ValueError("BOX_SUBJECT_ID must be provided.")
 
-    if not config.BOX_CLIENT_ID or not config.BOX_CLIENT_SECRET:
+    if not conf.BOX_CLIENT_ID or not conf.BOX_CLIENT_SECRET:
         logger.error("Box API credentials are missing")
         raise ValueError("BOX_CLIENT_ID and BOX_CLIENT_SECRET must be provided.")
 
     # Determine authentication type
-    if config.BOX_SUBJECT_TYPE == "user":
-        user_id = config.BOX_SUBJECT_ID
+    if conf.BOX_SUBJECT_TYPE == "user":
+        user_id = conf.BOX_SUBJECT_ID
         enterprise_id = None
         logger.info("Authenticating as Box user: %s", user_id)
     else:
         user_id = None
-        enterprise_id = config.BOX_SUBJECT_ID
+        enterprise_id = conf.BOX_SUBJECT_ID
         logger.info("Authenticating as Box enterprise: %s", enterprise_id)
 
     # Configure token storage
@@ -46,8 +46,8 @@ def get_box_client() -> BoxClient:
 
     # Create CCG configuration
     ccg_config = CCGConfig(
-        client_id=config.BOX_CLIENT_ID,
-        client_secret=config.BOX_CLIENT_SECRET,
+        client_id=conf.BOX_CLIENT_ID,
+        client_secret=conf.BOX_CLIENT_SECRET,
         user_id=user_id,
         enterprise_id=enterprise_id,
         token_storage=file_token_storage,

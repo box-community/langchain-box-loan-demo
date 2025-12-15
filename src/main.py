@@ -2,7 +2,7 @@ import asyncio
 import logging
 from IPython.display import Image, display
 
-from config import config  # noqa: F401 - importing config triggers logging setup
+from app_config import conf  # noqa: F401 - importing config triggers logging setup
 from agents.orchestrator import orchestrator_create
 from utils.display_messages import format_messages, stream_agent
 

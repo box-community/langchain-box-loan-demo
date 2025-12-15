@@ -1,7 +1,7 @@
 """Test script to demonstrate the logging system with all log levels."""
 
 import logging
-from config import config  # noqa: F401 - importing config triggers logging setup
+from app_config import conf  # noqa: F401 - importing config triggers logging setup
 
 # Get logger for this module
 logger = logging.getLogger(__name__)

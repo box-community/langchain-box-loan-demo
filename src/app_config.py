@@ -1,9 +1,11 @@
+from operator import ge
 from typing import Optional
+from box_sdk_gen import BoxClient
 
 from pydantic_settings import BaseSettings
 
 
-class _Config(BaseSettings):
+class _APP_Config(BaseSettings):
     """Configuration for Box API integration and application settings."""
 
     # Box API Configuration
@@ -30,14 +32,20 @@ class _Config(BaseSettings):
         "validate_assignment": True,  # Validate on assignment
     }
 
+    box_client: Optional[BoxClient] = None
+
 
 # Global config instance - import this from other modules
 # Usage: from src.config import config
-config = _Config()  # type: ignore
+conf = _APP_Config()  # type: ignore
+
+# Initialize box_client after conf is created (breaks circular import)
+from utils.box_api_auth import get_box_client  # noqa: E402
+conf.box_client = get_box_client()
 
 # Import logging_config to auto-configure logging based on config settings
 # This ensures logging is set up whenever config is imported
 import utils.logging_config  # noqa: E402, F401
 
 # For backwards compatibility and explicit exports
-__all__ = ["config"]
+__all__ = ["conf"]

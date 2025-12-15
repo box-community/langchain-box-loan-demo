@@ -39,6 +39,9 @@ MANIFEST
 # agents memories
 agents_memories/
 
+# Box upload cache
+box_upload_cache.json
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt

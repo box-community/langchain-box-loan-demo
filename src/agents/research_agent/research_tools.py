@@ -9,9 +9,9 @@ from langchain_core.tools import InjectedToolArg, tool
 from markdownify import markdownify
 from tavily import TavilyClient
 from typing_extensions import Annotated, Literal
-from config import config
+from app_config import conf
 
-tavily_client = TavilyClient(api_key=config.TAVILY_API_KEY)
+tavily_client = TavilyClient(api_key=conf.TAVILY_API_KEY)
 
 
 def fetch_webpage_content(url: str, timeout: float = 10.0) -> str:

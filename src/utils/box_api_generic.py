@@ -1,3 +1,4 @@
+import json
 import logging
 from pathlib import Path
 from typing import Dict, Optional
@@ -159,11 +160,25 @@ def box_folder_create(
             raise e
 
 
+def save_upload_cache_to_json(
+    folder_cache: Dict[str, Dict[str, str]], output_file: Path
+) -> None:
+    """Save the upload cache to a JSON file.
+
+    Args:
+        folder_cache: Dictionary mapping local paths to Box item metadata
+        output_file: Path to the JSON file to write
+    """
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(folder_cache, f, indent=2, ensure_ascii=False)
+    logger.info("Upload cache saved to: %s", output_file)
+
+
 def local_folder_upload(
     client: BoxClient,
     local_dir: Path,
     parent_folder_id: str,
-    folder_cache: Dict[str, str],
+    folder_cache: Dict[str, Dict[str, str]],
 ) -> None:
     """Recursively upload a directory and its contents to Box.
 
@@ -171,7 +186,8 @@ def local_folder_upload(
         client: Authenticated Box client
         local_dir: Path to the local directory to upload
         parent_folder_id: ID of the parent folder in Box
-        folder_cache: Cache of folder paths to Box folder IDs
+        folder_cache: Dictionary to track uploaded items with their Box IDs
+                     Structure: {path: {"name": str, "type": "file"|"folder", "id": str}}
     """
     # clip local_dir str to start at data/
     local_dir_str = str(local_dir)
@@ -189,12 +205,31 @@ def local_folder_upload(
                 client, item, parent_folder_id
             )
             if can_upload:
-                box_file_upload(client, item, parent_folder_id)
+                file_id = box_file_upload(client, item, parent_folder_id)
                 logger.info("Uploaded file: %s", item.name)
+                # Track the uploaded file
+                folder_cache[str(item)] = {
+                    "name": item.name,
+                    "type": "file",
+                    "id": file_id,
+                }
             elif conflict_file_id:
-                box_file_update(client, conflict_file_id, item)
+                file_id = box_file_update(client, conflict_file_id, item)
                 logger.info("Updated file: %s", item.name)
+                # Track the updated file
+                folder_cache[str(item)] = {
+                    "name": item.name,
+                    "type": "file",
+                    "id": file_id,
+                }
         elif item.is_dir():
             new_folder_id = box_folder_create(client, item.name, parent_folder_id)
             logger.info("Created folder: %s", item.name)
+            # Track the created folder
+            folder_cache[str(item)] = {
+                "name": item.name,
+                "type": "folder",
+                "id": new_folder_id,
+            }
+            # Recursively process subdirectory
             local_folder_upload(client, item, new_folder_id, folder_cache)

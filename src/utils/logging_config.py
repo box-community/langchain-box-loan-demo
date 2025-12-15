@@ -86,10 +86,7 @@ def _configure_logging(
     # Optional file handler (no colors)
     if log_file:
         file_formatter = logging.Formatter(
-            fmt=(
-                "%(asctime)s | %(levelname)-8s | "
-                "%(name)s:%(lineno)d | %(message)s"
-            ),
+            fmt=("%(asctime)s | %(levelname)-8s | %(name)s:%(lineno)d | %(message)s"),
             datefmt="%Y-%m-%d %H:%M:%S",
         )
         file_handler = logging.FileHandler(log_file)
@@ -107,8 +104,9 @@ def _configure_logging(
 # Auto-configure logging when this module is imported
 # Import config here to avoid circular imports
 try:
-    from config import config
-    _configure_logging(level=config.LOG_LEVEL, log_file=config.LOG_FILE)
+    from app_config import conf
+
+    _configure_logging(level=conf.LOG_LEVEL, log_file=conf.LOG_FILE)
 except ImportError:
     # If config isn't available yet, use defaults
     _configure_logging()
