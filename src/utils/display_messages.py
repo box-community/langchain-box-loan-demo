@@ -5,6 +5,7 @@ import json
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
+from rich.markdown import Markdown
 
 console = Console()
 
@@ -53,6 +54,7 @@ def format_messages(messages):
     for m in messages:
         msg_type = m.__class__.__name__.replace("Message", "")
         content = format_message_content(m)
+        content = Markdown(content)
 
         if msg_type == "Human":
             console.print(Panel(content, title="🧑 Human", border_style="blue"))

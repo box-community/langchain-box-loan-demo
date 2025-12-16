@@ -26,7 +26,7 @@ async def test_loan_application(applicant_name: str):
     logger.info(f"Creating loan orchestrator for applicant: {applicant_name}")
 
     # Create the orchestrator
-    agent = loan_orchestrator_create()
+    agent = loan_orchestrator_create(applicant_name=applicant_name)
 
     # Process the loan application
     request = f"Please process the auto loan application for {applicant_name} and provide a complete underwriting decision."
@@ -101,9 +101,9 @@ if __name__ == "__main__":
     # Uncomment one of these lines:
 
     asyncio.run(test_loan_application("Sarah Chen"))  # Perfect borrower
-    # asyncio.run(test_loan_application("Marcus Johnson"))   # Borderline case
-    # asyncio.run(test_loan_application("David Martinez"))   # High risk
-    # asyncio.run(test_loan_application("Jennifer Lopez"))   # Auto-deny
+    # asyncio.run(test_loan_application("Marcus Johnson"))  # Borderline case
+    # asyncio.run(test_loan_application("David Martinez"))  # High risk
+    # asyncio.run(test_loan_application("Jennifer Lopez"))  # Auto-deny
 
     # Or run all tests:
     # asyncio.run(main())

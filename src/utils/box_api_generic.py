@@ -233,3 +233,38 @@ def local_folder_upload(
             }
             # Recursively process subdirectory
             local_folder_upload(client, item, new_folder_id, folder_cache)
+
+
+def local_file_upload(
+    client: BoxClient,
+    local_file_path: Path,
+    parent_folder_id: str,
+) -> str:
+    """Upload a single file to Box.
+
+    Args:
+        client: Authenticated Box client
+        local_file_path: Path to the local file to upload
+        parent_folder_id: ID of the parent folder in Box
+        folder_cache: Dictionary to track uploaded items with their Box IDs
+                     Structure: {path: {"name": str, "type": "file"|"folder", "id": str}}
+    """
+    try:
+        (can_upload, conflict_file_id, _) = box_file_pre_flight_check(
+            client, local_file_path, parent_folder_id
+        )
+
+        if can_upload:
+            file_id = box_file_upload(client, local_file_path, parent_folder_id)
+            logger.info("Uploaded file: %s", local_file_path.name)
+
+        elif conflict_file_id:
+            file_id = box_file_update(client, conflict_file_id, local_file_path)
+            logger.info("Updated file: %s", local_file_path.name)
+        else:
+            raise ValueError("Unable to determine upload status for file.")
+
+        return file_id
+    except BoxAPIError as e:
+        logger.error("Failed to upload/update file '%s': %s", local_file_path, e)
+        raise e

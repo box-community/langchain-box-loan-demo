@@ -22,11 +22,12 @@ from agents.loan_underwriting import (
     extract_structured_loan_data,
     think_tool,
     calculate,
+    upload_text_file_to_box,
 )
 from app_config import conf
 
 
-def loan_orchestrator_create() -> CompiledStateGraph:
+def loan_orchestrator_create(applicant_name: str) -> CompiledStateGraph:
     """Create the loan underwriting orchestrator agent.
 
     Returns:
@@ -45,13 +46,16 @@ def loan_orchestrator_create() -> CompiledStateGraph:
             "Use this agent to locate folders, list documents, and extract structured data from loan files."
             "A box_upload_cache.json file exists in the memories folder with the location of all demo files in box."
         ),
-        "system_prompt": BOX_EXTRACT_AGENT_INSTRUCTIONS.format(date=current_date),
+        "system_prompt": BOX_EXTRACT_AGENT_INSTRUCTIONS.format(
+            date=current_date, applicant_name=applicant_name
+        ),
         "tools": [
             search_loan_folder,
             list_loan_documents,
             ask_box_ai_about_loan,
             extract_structured_loan_data,
             think_tool,
+            # upload_text_file_to_box,
         ],
     }
 
@@ -63,10 +67,13 @@ def loan_orchestrator_create() -> CompiledStateGraph:
             "Use this agent to query policy thresholds, approval authority levels, and compliance rules."
             "A box_upload_cache.json file exists in the memories folder with the location of all demo files in box."
         ),
-        "system_prompt": POLICY_AGENT_INSTRUCTIONS.format(date=current_date),
+        "system_prompt": POLICY_AGENT_INSTRUCTIONS.format(
+            date=current_date, applicant_name=applicant_name
+        ),
         "tools": [
             ask_box_ai_about_loan,  # Can query policy documents in Box
             think_tool,
+            # upload_text_file_to_box,
         ],
     }
 
@@ -78,12 +85,32 @@ def loan_orchestrator_create() -> CompiledStateGraph:
             "Use this agent to calculate DTI, LTV, identify policy violations, and assess risk levels."
             "A box_upload_cache.json file exists in the memories folder with the location of all demo files in box."
         ),
-        "system_prompt": RISK_CALCULATION_AGENT_INSTRUCTIONS.format(date=current_date),
+        "system_prompt": RISK_CALCULATION_AGENT_INSTRUCTIONS.format(
+            date=current_date, applicant_name=applicant_name
+        ),
         "tools": [
             calculate,
             think_tool,
+            # upload_text_file_to_box,
         ],
     }
+
+    # Sub-agent 4: Box Uploader for saving reports and data
+    # box_uploader_agent = {
+    #     "name": "box-uploader-agent",
+    #     "description": (
+    #         "Specialist for uploading documents to Box. "
+    #         "Use this agent to upload underwriting reports and save application data to Box."
+    #         "A box_upload_cache.json file exists in the memories folder with the location of all demo files in box."
+    #     ),
+    #     "system_prompt": BOX_UPLOADER_AGENT_INSTRUCTIONS.format(
+    #         date=current_date, applicant_name=applicant_name
+    #     ),
+    #     "tools": [
+    #         upload_text_file_to_box,
+    #         think_tool,
+    #     ],
+    # }
 
     # Create the main LLM model
     model = init_chat_model(
@@ -114,12 +141,15 @@ def loan_orchestrator_create() -> CompiledStateGraph:
     # Create the orchestrator agent
     agent = create_deep_agent(
         model=model,
-        tools=[],  # Orchestrator has no direct tools, delegates to sub-agents
-        system_prompt=LOAN_ORCHESTRATOR_INSTRUCTIONS.format(date=current_date),
+        tools=[upload_text_file_to_box],
+        system_prompt=LOAN_ORCHESTRATOR_INSTRUCTIONS.format(
+            date=current_date, applicant_name=applicant_name
+        ),
         subagents=[
             box_extract_agent,
             policy_agent,
             risk_calculation_agent,
+            # box_uploader_agent,
         ],
         backend=backend,
     )

@@ -1,8 +1,10 @@
 from operator import ge
 from typing import Optional
+from venv import logger
 from box_sdk_gen import BoxClient
 
 from pydantic_settings import BaseSettings
+from pathlib import Path
 
 
 class _APP_Config(BaseSettings):
@@ -23,6 +25,7 @@ class _APP_Config(BaseSettings):
     # External API Keys
     TAVILY_API_KEY: str
     ANTHROPIC_API_KEY: str
+    AGENTS_MEMORY_FOLDER: str = "agents_memories"
 
     model_config = {
         "env_file": ".env",
@@ -33,6 +36,7 @@ class _APP_Config(BaseSettings):
     }
 
     box_client: Optional[BoxClient] = None
+    local_agents_memory: Optional[Path] = None
 
 
 # Global config instance - import this from other modules
@@ -41,11 +45,20 @@ conf = _APP_Config()  # type: ignore
 
 # Initialize box_client after conf is created (breaks circular import)
 from utils.box_api_auth import get_box_client  # noqa: E402
+
 conf.box_client = get_box_client()
+
+# Memories folder is on the project folder
+memories_folder = Path(__file__).parent.parent / conf.AGENTS_MEMORY_FOLDER
+memories_folder.mkdir(parents=True, exist_ok=True)
+
+conf.local_agents_memory = memories_folder
+
 
 # Import logging_config to auto-configure logging based on config settings
 # This ensures logging is set up whenever config is imported
 import utils.logging_config  # noqa: E402, F401
+
 
 # For backwards compatibility and explicit exports
 __all__ = ["conf"]

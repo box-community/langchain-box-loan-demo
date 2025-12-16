@@ -4,6 +4,8 @@ This module provides LangChain tool wrappers for Box AI functionality
 used by the loan underwriting sub-agents.
 """
 
+from anyio import Path
+from pathlib import Path as PPath
 from langchain_core.tools import tool
 from box_ai_agents_toolkit import (
     box_locate_folder_by_name,
@@ -13,6 +15,7 @@ from box_ai_agents_toolkit import (
 )
 from app_config import conf
 from utils.box_api_auth import get_box_client
+from utils.box_api_generic import local_file_upload
 
 
 @tool(parse_docstring=True)
@@ -188,7 +191,8 @@ def extract_structured_loan_data(folder_id: str, fields_schema: str) -> str:
         # Format the response
         result = f"Extracted Data from Folder {folder_id}:\n\n"
         if isinstance(ai_response, dict):
-            result += json.dumps(ai_response, indent=2)
+            ai_response_content = ai_response.get("AI_response", {})
+            result += json.dumps(ai_response_content.get("answer", {}), indent=2)
         else:
             result += str(ai_response)
 
@@ -274,3 +278,39 @@ def calculate(expression: str) -> str:
             return f"{expression} = {result}"
     except Exception as e:
         return f"Error calculating '{expression}': {str(e)}"
+
+
+@tool(parse_docstring=True)
+def upload_text_file_to_box(
+    parent_folder_id: str, file_name: str, local_file_path: PPath
+) -> str:
+    """Upload a text file to a specified Box folder.
+
+    Args:
+        parent_folder_id: Box folder ID where the file will be uploaded
+        file_name: Name of the file to be created in Box
+        local_file_path: Path to the local text file to upload
+
+    Returns:
+        Confirmation message with uploaded file details
+    """
+    try:
+        if conf.box_client is None:
+            conf.box_client = get_box_client()
+
+        # translate local file path from virtual to real path
+        if not conf.local_agents_memory:
+            return "Error: Local agents memory folder is not configured."
+
+        real_file_path = conf.local_agents_memory / local_file_path.relative_to(
+            "/memories/"
+        )
+        file_id = local_file_upload(
+            client=conf.box_client,
+            local_file_path=real_file_path,
+            parent_folder_id=parent_folder_id,
+        )
+
+        return f"File '{file_name}' uploaded successfully to folder ID {parent_folder_id} (File ID: {file_id})"
+    except Exception as e:
+        return f"Error uploading file '{file_name}' to folder ID {parent_folder_id}: {str(e)}"
