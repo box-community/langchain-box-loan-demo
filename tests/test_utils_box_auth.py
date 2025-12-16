@@ -1,6 +1,7 @@
-from utils.box_api_auth import get_box_client
-from app_config import conf
 from box_sdk_gen import BoxAPIError, BoxClient
+
+from app_config import conf
+from utils.box_api_auth import get_box_client
 
 
 def test_utils_box_auth_get_box_client():

@@ -1,6 +1,7 @@
 import logging
 
-from box_sdk_gen import BoxAPIError, BoxClient, CCGConfig, BoxCCGAuth, FileTokenStorage
+from box_sdk_gen import BoxAPIError, BoxCCGAuth, BoxClient, CCGConfig, FileTokenStorage
+
 from app_config import conf
 
 logger = logging.getLogger(__name__)

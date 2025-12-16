@@ -6,9 +6,9 @@ loan applications from Box.
 
 import asyncio
 import logging
-import re
+
 from agents.loan_orchestrator import loan_orchestrator_create
-from utils.display_messages import format_messages, stream_agent
+from utils.display_messages import stream_agent
 
 # Configure logging
 logging.basicConfig(

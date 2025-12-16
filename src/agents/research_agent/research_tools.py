@@ -9,6 +9,7 @@ from langchain_core.tools import InjectedToolArg, tool
 from markdownify import markdownify
 from tavily import TavilyClient
 from typing_extensions import Annotated, Literal
+
 from app_config import conf
 
 tavily_client = TavilyClient(api_key=conf.TAVILY_API_KEY)

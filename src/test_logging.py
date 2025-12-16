@@ -1,6 +1,7 @@
 """Test script to demonstrate the logging system with all log levels."""
 
 import logging
+
 from app_config import conf  # noqa: F401 - importing config triggers logging setup
 
 # Get logger for this module
@@ -22,7 +23,7 @@ def demonstrate_logging() -> None:
 
     # Demonstrate exception logging
     try:
-        result = 10 / 0
+        result = 10 / 0  # noqa: F841
     except ZeroDivisionError as e:
         logger.error("Mathematical error occurred: %s", e, exc_info=True)
 

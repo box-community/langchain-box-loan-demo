@@ -2,20 +2,9 @@ import logging
 from pathlib import Path
 from typing import Dict
 
-from box_sdk_gen import BoxAPIError, BoxClient
-from box_sdk_gen.managers.folders import CreateFolderParent
-from box_sdk_gen.managers.uploads import (
-    UploadFileAttributes,
-    UploadFileAttributesParentField,
-    UploadFileVersionAttributes,
-)
-
 from app_config import conf
 from utils.box_api_auth import get_box_client
 from utils.box_api_generic import (
-    box_file_pre_flight_check,
-    box_file_upload,
-    box_file_update,
     box_folder_create,
     local_folder_upload,
     save_upload_cache_to_json,

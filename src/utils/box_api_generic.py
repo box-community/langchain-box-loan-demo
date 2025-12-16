@@ -6,12 +6,12 @@ from typing import Dict, Optional
 from box_sdk_gen import (
     BoxAPIError,
     BoxClient,
+    CreateFolderParent,
     PreflightFileUploadCheckParent,
-    UploadUrl,
     UploadFileAttributes,
     UploadFileAttributesParentField,
     UploadFileVersionAttributes,
-    CreateFolderParent,
+    UploadUrl,
 )
 
 logger = logging.getLogger(__name__)

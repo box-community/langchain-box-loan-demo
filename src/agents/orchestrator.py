@@ -6,17 +6,16 @@ for conducting web research with strategic thinking and context management.
 
 from datetime import datetime
 from pathlib import Path
-from langchain.chat_models import init_chat_model
-from langchain_anthropic import ChatAnthropic
-from langgraph.graph.state import CompiledStateGraph
-from deepagents.backends import CompositeBackend, StateBackend, FilesystemBackend
 
 # from langchain_google_genai import ChatGoogleGenerativeAI
 from deepagents import create_deep_agent
+from deepagents.backends import CompositeBackend, FilesystemBackend, StateBackend
+from langchain.chat_models import init_chat_model
+from langgraph.graph.state import CompiledStateGraph
 
 from agents.research_agent.research_prompts import (
-    RESEARCHER_INSTRUCTIONS,
     RESEARCH_WORKFLOW_INSTRUCTIONS,
+    RESEARCHER_INSTRUCTIONS,
     SUBAGENT_DELEGATION_INSTRUCTIONS,
 )
 from agents.research_agent.research_tools import tavily_search, think_tool

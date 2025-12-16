@@ -4,15 +4,16 @@ This module provides LangChain tool wrappers for Box AI functionality
 used by the loan underwriting sub-agents.
 """
 
-from anyio import Path
 from pathlib import Path as PPath
-from langchain_core.tools import tool
+
 from box_ai_agents_toolkit import (
-    box_locate_folder_by_name,
-    box_folder_items_list,
     box_ai_ask_file_multi,
     box_ai_extract_structured_enhanced_using_fields,
+    box_folder_items_list,
+    box_locate_folder_by_name,
 )
+from langchain_core.tools import tool
+
 from app_config import conf
 from utils.box_api_auth import get_box_client
 from utils.box_api_generic import local_file_upload
@@ -40,7 +41,7 @@ def search_loan_folder(applicant_name: str) -> str:
         )
 
         if folder:
-            return f"Found folder: {folder.name} (ID: {folder.id})"
+            return f"Found folder: {folder.name} (ID: {folder.id})"  # type: ignore
         else:
             return f"Folder not found for applicant: {applicant_name}"
     except Exception as e:
@@ -179,7 +180,7 @@ def extract_structured_loan_data(folder_id: str, fields_schema: str) -> str:
         try:
             fields = json.loads(fields_schema)
             if not isinstance(fields, list):
-                return f"Error: fields_schema must be a JSON array of field definitions"
+                return "Error: fields_schema must be a JSON array of field definitions"
         except json.JSONDecodeError as e:
             return f"Error parsing fields_schema: {str(e)}"
 
@@ -254,7 +255,7 @@ def calculate(expression: str) -> str:
     def eval_expr(node: Any) -> float:
         """Recursively evaluate AST node."""
         if isinstance(node, ast.Num):
-            return node.n
+            return node.n  # type: ignore
         elif isinstance(node, ast.BinOp):
             return operators_map[type(node.op)](
                 eval_expr(node.left), eval_expr(node.right)

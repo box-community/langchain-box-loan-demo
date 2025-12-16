@@ -1,10 +1,8 @@
-from operator import ge
-from typing import Optional
-from venv import logger
-from box_sdk_gen import BoxClient
-
-from pydantic_settings import BaseSettings
 from pathlib import Path
+from typing import Optional
+
+from box_sdk_gen import BoxClient
+from pydantic_settings import BaseSettings
 
 
 class _APP_Config(BaseSettings):
@@ -58,7 +56,6 @@ conf.local_agents_memory = memories_folder
 # Import logging_config to auto-configure logging based on config settings
 # This ensures logging is set up whenever config is imported
 import utils.logging_config  # noqa: E402, F401
-
 
 # For backwards compatibility and explicit exports
 __all__ = ["conf"]

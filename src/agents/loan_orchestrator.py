@@ -6,22 +6,23 @@ to process auto loan applications and make risk-based decisions.
 
 from datetime import datetime
 from pathlib import Path
+
+from deepagents import create_deep_agent
+from deepagents.backends import CompositeBackend, FilesystemBackend, StateBackend
 from langchain.chat_models import init_chat_model
 from langgraph.graph.state import CompiledStateGraph
-from deepagents.backends import CompositeBackend, StateBackend, FilesystemBackend
-from deepagents import create_deep_agent
 
 from agents.loan_underwriting import (
-    LOAN_ORCHESTRATOR_INSTRUCTIONS,
     BOX_EXTRACT_AGENT_INSTRUCTIONS,
+    LOAN_ORCHESTRATOR_INSTRUCTIONS,
     POLICY_AGENT_INSTRUCTIONS,
     RISK_CALCULATION_AGENT_INSTRUCTIONS,
-    search_loan_folder,
-    list_loan_documents,
     ask_box_ai_about_loan,
-    extract_structured_loan_data,
-    think_tool,
     calculate,
+    extract_structured_loan_data,
+    list_loan_documents,
+    search_loan_folder,
+    think_tool,
     upload_text_file_to_box,
 )
 from app_config import conf
@@ -150,8 +151,8 @@ def loan_orchestrator_create(applicant_name: str) -> CompiledStateGraph:
             policy_agent,
             risk_calculation_agent,
             # box_uploader_agent,
-        ],
-        backend=backend,
+        ],  # type: ignore
+        backend=backend,  # type: ignore
     )
 
     return agent
