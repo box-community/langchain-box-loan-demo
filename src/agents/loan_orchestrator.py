@@ -96,23 +96,6 @@ def loan_orchestrator_create(applicant_name: str) -> CompiledStateGraph:
         ],
     }
 
-    # Sub-agent 4: Box Uploader for saving reports and data
-    # box_uploader_agent = {
-    #     "name": "box-uploader-agent",
-    #     "description": (
-    #         "Specialist for uploading documents to Box. "
-    #         "Use this agent to upload underwriting reports and save application data to Box."
-    #         "A box_upload_cache.json file exists in the memories folder with the location of all demo files in box."
-    #     ),
-    #     "system_prompt": BOX_UPLOADER_AGENT_INSTRUCTIONS.format(
-    #         date=current_date, applicant_name=applicant_name
-    #     ),
-    #     "tools": [
-    #         upload_text_file_to_box,
-    #         think_tool,
-    #     ],
-    # }
-
     # Create the main LLM model
     model = init_chat_model(
         model="anthropic:claude-sonnet-4-5-20250929",
@@ -121,8 +104,7 @@ def loan_orchestrator_create(applicant_name: str) -> CompiledStateGraph:
     )
 
     # Configure backend for persistent memory
-    memories_folder = Path(__file__).parent.parent.parent / "agents_memories"
-    memories_folder.mkdir(parents=True, exist_ok=True)
+    memories_folder = conf.local_agents_memory
 
     # Create filesystem backend for persistent memory
     filesystem_backend = FilesystemBackend(

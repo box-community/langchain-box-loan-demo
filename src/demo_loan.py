@@ -50,15 +50,6 @@ async def test_loan_application(applicant_name: str):
         },
     )
 
-    # for chunk in agent.stream(
-    #     {"messages": [{"role": "user", "content": request}]}, stream_mode="messages"
-    # ):
-    #     # Print agent messages
-    #     if isinstance(chunk, tuple):
-    #         message_data = chunk[0]
-    #         if hasattr(message_data, "content") and message_data.content:
-    #             print(message_data.content, end="", flush=True)
-
     print("\n\n" + "=" * 80)
     print("PROCESSING COMPLETE")
     print("=" * 80 + "\n")
@@ -100,9 +91,9 @@ if __name__ == "__main__":
     # For quick testing, run a single applicant
     # Uncomment one of these lines:
 
-    asyncio.run(test_loan_application("Sarah Chen"))  # Perfect borrower
+    # asyncio.run(test_loan_application("Sarah Chen"))  # Perfect borrower
     # asyncio.run(test_loan_application("Marcus Johnson"))  # Borderline case
-    # asyncio.run(test_loan_application("David Martinez"))  # High risk
+    asyncio.run(test_loan_application("David Martinez"))  # High risk
     # asyncio.run(test_loan_application("Jennifer Lopez"))  # Auto-deny
 
     # Or run all tests:

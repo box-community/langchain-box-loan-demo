@@ -45,9 +45,10 @@ def main() -> None:
         local_folder_upload(client, data_dir, base_folder_id, folder_cache)
 
         # Memories folder is on the project folder
-        memories_folder = Path(__file__).parent.parent.parent / "agents_memories"
-        memories_folder.mkdir(parents=True, exist_ok=True)
+        memories_folder = conf.local_agents_memory
         # Save the upload cache to a JSON file
+        if memories_folder is None:
+            raise ValueError("Local agents memory folder is not configured.")
         cache_file = memories_folder / "box_upload_cache.json"
         save_upload_cache_to_json(folder_cache, cache_file)
 

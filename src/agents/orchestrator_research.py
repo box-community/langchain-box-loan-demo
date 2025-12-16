@@ -61,9 +61,7 @@ def orchestrator_create() -> CompiledStateGraph:
     )
 
     # Configure back end
-    # Memories folder is on the project folder
-    memories_folder = Path(__file__).parent.parent.parent / "agents_memories"
-    memories_folder.mkdir(parents=True, exist_ok=True)
+    memories_folder = conf.local_agents_memory
 
     # Create filesystem backend for persistent memory
     filesystem_backend = FilesystemBackend(
@@ -85,8 +83,8 @@ def orchestrator_create() -> CompiledStateGraph:
         model=model,
         tools=[],
         system_prompt=INSTRUCTIONS,
-        subagents=[research_sub_agent],
-        backend=backend,
+        subagents=[research_sub_agent],  # type: ignore
+        backend=backend,  # type: ignore
     )
 
     return agent
