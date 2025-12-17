@@ -232,7 +232,7 @@ graph TD
 
     Extract -->|Box AI Tools| BoxData[Box AI Ask<br/>Box AI Extract<br/>Folder Search]
     Policy -->|Box AI Tools| BoxPolicy[Box AI Ask<br/>Policy Documents]
-    Risk -->|Calculation Tools| Calc[calculate()<br/>think_tool()]
+    Risk -->|Calculation Tools| Calc["calculate<br/>think_tool"]
 
     Extract -.->|Data Report| Mem[Persistent Memory<br/>agents_memories/]
     Policy -.->|Policy Report| Mem
