@@ -22,6 +22,7 @@ This project showcases an **intelligent auto loan underwriting system** that use
 - [Sample Applications](#-sample-applications)
 - [Project Structure](#-project-structure)
 - [Development](#-development)
+- [Documentation](#-documentation)
 
 ---
 
@@ -394,7 +395,10 @@ langchain-box-loan-demo/
 │   ├── box_upload_cache.json      # Box upload tracking
 │   └── {Applicant Name}/          # Per-applicant memory folders
 │
-├── docs/                           # Documentation (coming soon)
+├── docs/                           # Documentation
+│   ├── deep-agents-framework.md   # LangChain Deep Agents guide
+│   ├── box-ai-agents-toolkit.md   # Box AI Agents Toolkit reference
+│   └── utilities.md               # Utilities module reference
 ├── tests/                          # Test suite
 ├── .venv/                          # Virtual environment (created by uv)
 ├── pyproject.toml                  # UV project configuration
@@ -470,6 +474,42 @@ Logs include:
 - Box API calls and responses
 - Tool executions and results
 - Error stack traces
+
+---
+
+## 📚 Documentation
+
+This project includes comprehensive documentation covering all major components:
+
+### [Deep Agents Framework Guide](docs/deep-agents-framework.md)
+
+Complete guide to LangChain's Deep Agents framework as used in this project:
+- **Overview** - What Deep Agents are and core philosophy
+- **Key Concepts** - Orchestrators, sub-agents, backends, and memory management
+- **Creating Deep Agents** - Factory function patterns and configuration
+- **Tool Integration** - LangChain tool patterns and categories
+- **Sub-Agent Delegation** - How delegation works and best practices
+- **Memory Management** - Virtual paths, persistent storage, and cleanup
+- **Advanced Features** - Model configuration, parallel execution, reflection tools
+
+### [Box AI Agents Toolkit Reference](docs/box-ai-agents-toolkit.md)
+
+Complete reference for the `box-ai-agents-toolkit` library:
+- **What This Project Uses** - Box AI functions, search, file operations, authentication
+- **Library Organization** - Module structure and function categories
+- **Complete Function Reference** - All 150+ functions with signatures and examples
+- **Integration with LangChain** - How toolkit functions are wrapped as LangChain tools
+- **Error Handling** - Response formats and error patterns
+- **Usage Examples** - Practical examples of common operations
+
+### [Utilities Reference](docs/utilities.md)
+
+Detailed reference for utility modules in `src/utils/`:
+- **box_api_auth.py** - Box CCG authentication with token persistence
+- **box_api_generic.py** - Custom file/folder operations, pre-flight checks, recursive uploads
+- **display_messages.py** - Agent message streaming and rich terminal formatting
+- **logging_config.py** - Centralized colored logging configuration
+- **Common Patterns** - Integration examples and typical usage workflows
 
 ---
 
