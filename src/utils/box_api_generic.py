@@ -208,7 +208,7 @@ def local_folder_upload(
                 file_id = box_file_upload(client, item, parent_folder_id)
                 logger.info("Uploaded file: %s", item.name)
                 # Track the uploaded file
-                folder_cache[str(item)] = {
+                folder_cache[str(item.name)] = {
                     "name": item.name,
                     "type": "file",
                     "id": file_id,
@@ -217,7 +217,7 @@ def local_folder_upload(
                 file_id = box_file_update(client, conflict_file_id, item)
                 logger.info("Updated file: %s", item.name)
                 # Track the updated file
-                folder_cache[str(item)] = {
+                folder_cache[str(item.name)] = {
                     "name": item.name,
                     "type": "file",
                     "id": file_id,
@@ -226,7 +226,7 @@ def local_folder_upload(
             new_folder_id = box_folder_create(client, item.name, parent_folder_id)
             logger.info("Created folder: %s", item.name)
             # Track the created folder
-            folder_cache[str(item)] = {
+            folder_cache[str(item.name)] = {
                 "name": item.name,
                 "type": "folder",
                 "id": new_folder_id,

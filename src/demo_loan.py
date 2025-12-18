@@ -94,7 +94,7 @@ if __name__ == "__main__":
     # asyncio.run(test_loan_application("Sarah Chen"))  # Perfect borrower
     # asyncio.run(test_loan_application("Marcus Johnson"))  # Borderline case
     asyncio.run(test_loan_application("David Martinez"))  # High risk
-    # asyncio.run(test_loan_application("Jennifer Lopez"))  # Auto-deny
+    asyncio.run(test_loan_application("Jennifer Lopez"))  # Auto-deny
 
     # Or run all tests:
     # asyncio.run(main())
