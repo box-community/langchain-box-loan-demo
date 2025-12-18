@@ -381,11 +381,17 @@ langchain-box-loan-demo/
 │
 ├── data/                            # Sample loan data (local copies)
 │   ├── Applications/                # Four complete loan applications
-│   │   ├── Sarah Chen/             # Applicant documents (PDFs)
+│   │   ├── Sarah Chen/
+│   │   │   └── Sarah Documents/    # Applicant documents (PDFs)
 │   │   ├── Marcus Johnson/
+│   │   │   └── Marcus Documents/
 │   │   ├── David Martinez/
-│   │   ├── Jennifer Lopez/
-│   │   └── *.md                    # Quick reference guides
+│   │   │   └── David Documents/
+│   │   └── Jennifer Lopez/
+│   │       └── Jenifer Documents/
+│   ├── Demo Goal Samples/          # Quick reference documentation
+│   │   ├── QUICK_REFERENCE_*.md   # Per-applicant summaries
+│   │   └── ULTIMATE_SUMMARY.md    # Complete dataset overview
 │   └── Policies/                   # Underwriting policy documents
 │       ├── Auto Loan Underwriting Standards.md
 │       ├── Exception Approval Authority.md

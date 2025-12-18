@@ -231,7 +231,7 @@ Save upload cache to a JSON file for tracking uploaded items.
 from pathlib import Path
 
 cache = {
-    "data/Applications/Sarah Chen/application.pdf": {
+    "data/Applications/Sarah Chen/Sarah Documents/application.pdf": {
         "name": "application.pdf",
         "type": "file",
         "id": "123456789"
